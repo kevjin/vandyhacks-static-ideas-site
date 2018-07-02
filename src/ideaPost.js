@@ -18,6 +18,12 @@ export default class IdeaPost extends React.Component {
     if(committee.indexOf("SPONSORSHIP")!=-1) {
       tagColor = "#f7884c";
     }
+    if(committee.indexOf("COMMUNICATIONS")!=-1) {
+      tagColor = "#b71aba";
+    }
+    if(committee.indexOf("HACKERXP")!=-1) {
+      tagColor = "#9bf442";
+    }
 
     if(ideaDesc.indexOf("Upvotes: ")!=-1) {
       if(ideaDesc.indexOf("Edited")==-1) {

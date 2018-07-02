@@ -7,17 +7,30 @@ let Header = createReactClass({
     sortIdeas: function() {
       this.props.sortIdeas();
     },
+    filterTag: function(tag) {
+      this.props.filterTag(tag);
+    },
     render: function() {
       return(
           <div className = "wrapper">
             <h1 className = "header-text">VandyHacks Idea Board</h1>
+            <div className="options-wrapper">
             <label className="switch">
             <input type="checkbox" id="togBtn" onClick={this.sortIdeas}></input>
             <div className="slider round">
             <span className="on">Popular</span>
-            <span className="off">Recent</span>
+            <span className="off">Relevant</span>
             </div>
             </label>
+            <div>
+              <button className="filterButtons" onClick={this.filterTag.bind(null,"ALL")}>All</button>
+              <button className="filterButtons" onClick={this.filterTag.bind(null,"LOGISTICS")}>Logistics</button>
+              <button className="filterButtons" onClick={this.filterTag.bind(null,"DEV")}>Dev</button>
+              <button className="filterButtons" onClick={this.filterTag.bind(null,"SPONSORSHIP")}>Sponsorship</button>
+              <button className="filterButtons" onClick={this.filterTag.bind(null,"COMMUNICATIONS")}>Communications</button>
+              <button className="filterButtons" onClick={this.filterTag.bind(null,"HACKERXP")}>HackerXP</button>
+            </div>
+            </div>
 
           <style jsx global>{`
             * {
@@ -26,10 +39,36 @@ let Header = createReactClass({
             }
             `}</style>
           <style jsx>{`
+          .options-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+          }
+          @media only screen and (max-width: 875px) {
+            .options-wrapper {
+              flex-direction: column;
+            }
+            .switch {
+              margin: 10px;
+            }
+          }
+          .filterButtons {
+            border: none;
+            border-radius: 5px 5px 0px 0px;
+            background-color: #0F0C2D;
+            font-weight: bold;
+            font-size: 20px;
+            padding: 8px;
+            margin: 0px 4px;
+            color: white;
+          }
+          .filterButtons:hover {
+            background-color: #13BF65;
+          }
           .wrapper {
-            background-color: #5DB5A4;
+            background-color: #18816A;
             width: 98%;
-            padding: 1%;
+            padding: 1% 1% 0% 1%;
           }
           .header-text {
             color: white;
@@ -52,7 +91,7 @@ let Header = createReactClass({
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #F57A82;
+            background-color: #13BF65;
             -webkit-transition: .4s;
             transition: .4s;
           }
@@ -70,7 +109,7 @@ let Header = createReactClass({
           }
 
           input:checked + .slider {
-            background-color: #ED5276;
+            background-color: #1AA09C;
           }
 
           input:focus + .slider {
@@ -103,7 +142,7 @@ let Header = createReactClass({
             left: 25%;
           }
           .off {
-            right: -5%;
+            right: -14%;
           }
 
           input:checked+ .slider .on
