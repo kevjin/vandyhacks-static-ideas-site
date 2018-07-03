@@ -47,6 +47,7 @@ export default class IdeaPost extends React.Component {
           <div className = "title">
           <div className = "committee" style={{backgroundColor: this.state.tagColor}}>{this.state.committee}</div><p className = "name">{this.state.name}</p>
           <p className = "author">Submitted by {this.state.author}</p>
+          <p className = "lastchanged" >{this.props.lastChanged}</p>
         </div>
           <p className = "upvotes">{this.state.upvotes} Upvotes</p>
         </div>
@@ -58,6 +59,10 @@ export default class IdeaPost extends React.Component {
           border-radius: 8px;
           display: flex;
           justify-content: space-between;
+        }
+        .lastchanged {
+          font-size: .9em;
+          margin: 4px 0px 0 10px;
         }
         .committee {
           font-weight: bold;
@@ -72,7 +77,7 @@ export default class IdeaPost extends React.Component {
           display: inline-block;
         }
         .author {
-          font-size: .8em;
+          font-size: .9em;
           margin: 10px 0px 0 10px;
           font-style: italic;
         }

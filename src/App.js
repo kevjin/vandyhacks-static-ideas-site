@@ -13,7 +13,7 @@ var App = createReactClass({
   componentWillMount: function() {
     fetch('http://vandyhacks-slackbot.herokuapp.com/api/cards', {
       method: 'GET',
-    }).then(x => {return x.text()}).then(JSON.stringify()).then((x) => {
+    }).then(x => {return x.text()}).then(JSON.parse).then(this.sortAllByRecent).then(this.addTimeStampToAllCards).then(JSON.stringify).then((x) => {
       this.setState({
         loaded: true,
         data: x,
@@ -21,6 +21,56 @@ var App = createReactClass({
         currentTag: "ALL"
       });
     });
+  },
+  addTimeStampToAllCards: function(cards) {
+    return new Promise((resolve, reject) => {
+      for(let i in cards) {
+        this.addTimeStamp(cards[i])
+        if(i==cards.length-1) {
+          resolve(cards)
+        }
+      }
+    })
+  },
+  sortAllByRecent: function(cards) {
+    return new Promise((resolve, reject) => {
+      cards.sort(function(a,b) {
+        return Date.parse(a.dateLastActivity) - Date.parse(b.dateLastActivity);
+      }).reverse()
+      resolve(cards)
+    })
+  },
+  addTimeStamp: function(card) { 
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    let postedTime = new Date(card.dateLastActivity);
+    let formattedTime = `${months[postedTime.getMonth()]} ${postedTime.getDate()}, ${postedTime.getFullYear()}`
+    card.postedTime = `Last updated on ${formattedTime}`
+    // const MINUTE = 60 * SECOND
+    // const SECOND = 1
+    // const HOUR = MINUTE * 60
+    // const DAY = HOUR * 24
+    // let postedTime = Date.parse(card.dateLastActivity);
+    // let currentTime = Date.now();
+    // console.log(typeof(postedTime));
+    // console.log(postedTime);
+    // let lastUpdated = currentTime - postedTime;
+    // console.log(`Time diff ${lastUpdated/MINUTE}`)
+    // if(lastUpdated/DAY >= 1) {
+    //   card.lastUpdated = `Last updated ${Math.floor(lastUpdated/DAY)} days ago`;
+    //   return;
+    // }
+    // if(lastUpdated/HOUR >= 1) {
+    //   card.lastUpdated = `Last updated ${Math.floor(lastUpdated/DAY)} hours ago`;
+    //   return;
+    // }
+    // if(lastUpdated/MINUTE >= 1) {
+    //   card.lastUpdated = `Last updated ${Math.floor(lastUpdated/DAY)} minutes ago`;
+    //   return;
+    // }
+    // if(lastUpdated/SECOND >= 1) {
+    //   card.lastUpdated = `Last updated ${Math.floor(lastUpdated/DAY)} seconds ago`;
+    //   return;
+    // }
   },
   sortIdeas: function() {
     if(!this.state.isRecent) {
@@ -37,6 +87,7 @@ var App = createReactClass({
     new Promise((resolve, reject) => {
       let sortByUpvotes = []
       let cards = JSON.parse(this.state.data);
+      this.addTimeStamp(cards[0])
       for (let i in cards) {
         let upvotes = 0;
         if(cards[i].desc.indexOf("Upvotes: ")!=-1) {
@@ -66,7 +117,7 @@ var App = createReactClass({
     });
   },
   filterTag: function(tag) {
-    console.log(this.state.isRecent)
+    console.log(this.state.isRecent);
     new Promise((resolve, reject) => {
       let cards = JSON.parse(this.state.initial);
       if(tag!=="ALL") {
@@ -78,7 +129,11 @@ var App = createReactClass({
         }
         resolve(filteredCards);
       }
-        resolve(cards)
+        if(!this.state.isRecent) {
+          console.log("ok please");
+          this.sortAllByRecent(cards);
+        }
+        resolve(cards);
         reject("whoopsies!!!!");
     }).then(filteredCards => {
       this.setState({
@@ -104,7 +159,7 @@ var App = createReactClass({
             JSON.parse(this.state.data).map((card, i) => {
               return (
                 <div key={i + card.desc}>
-                <IdeaPost ideaName = {card.name} ideaDesc = {card.desc} />
+                <IdeaPost ideaName = {card.name} ideaDesc = {card.desc} lastChanged = {card.postedTime} />
                 </div>
               )
           })}

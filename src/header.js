@@ -19,7 +19,7 @@ let Header = createReactClass({
             <input type="checkbox" id="togBtn" onClick={this.sortIdeas}></input>
             <div className="slider round">
             <span className="on">Popular</span>
-            <span className="off">Relevant</span>
+            <span className="off">Recent</span>
             </div>
             </label>
             <div>
@@ -142,7 +142,7 @@ let Header = createReactClass({
             left: 25%;
           }
           .off {
-            right: -14%;
+            right: -5%;
           }
 
           input:checked+ .slider .on
